@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+    <head th:include="layout :: head">
+        <title>
+            Kezdőoldal
+        </title>
+    </head>
+
+    <body>
+
+        <div layout:fragment="content">
+            <div th:replace="~{fragments/search :: search}">
+                Keresősáv helye
+            </div>
+
+            <div sec:authorize="!isAuthenticated()">
+                <div th:replace="~{fragments/hero :: hero}">
+                    Hero helye
+                </div>
+            </div>
+
+            <div class="card">
+
+                <div class="card-header card-title mb-3">
+                    <strong>
+                        Álláshirdetések:
+                    </strong>
+                </div>
+
+                <div class="card-body">
+
+                    <div th:unless="${jobadvertisements.isEmpty()}">
+
+                        <table class="table">
+                            <thead>
+                                <th>Állás</th>
+                                <th>Műveletek</th>
+                            </thead>
+                            <tbody>
+                                <tr th:each="jobadvertisement: ${jobadvertisements}">
+                                    <td>
+                                        <strong>
+                                            Munkakör:
+                                        </strong>
+                                        <span th:text="${jobadvertisement.title}">
+                                            munkakör
+                                        </span> <br>
+                                            <strong>
+                                                Helyszín:
+                                            </strong>
+                                            <span th:text="${jobadvertisement.location}">
+                                                helyszín
+                                            </span>
+                                    </td>
+                                    <td class="d-flex gap-3">
+                                        <a th:href="@{/jobadvertisements/show/{id}(id=${jobadvertisement.id})}"
+                                           class="btn btn-primary mb-3">
+                                            <i class="bi bi-info-circle"></i>
+                                            Részletek...</a>
+                                        <div sec:authorize="hasAnyAuthority('Admin')">
+                                            <a th:href="@{/jobadvertisements/edit/{id}(id=${jobadvertisement.id})}"
+                                               class="btn btn-warning mb-3"> <i class="bi bi-pencil-square"></i>
+                                                Szerkesztés</a>
+                                            <a class="btn btn-danger" th:href="@{/jobadvertisements/delete/{id}(id=${jobadvertisement.id})}">
+                                                <i class="bi bi-trash"></i> Törlés
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="text-center">
+                            {{ $jobadvertisements->links() }} a pagináció helye
+                        </div>
+                    </div>
+
+                    <div th:if="${jobadvertisements.isEmpty()}">
+                        <p class="text-center">Nincsenek álláshirdetések.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-dark alert-dismissible fade show" role="alert" th:if="${message}">
+            Üzenet
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${param.logout}">
+            Sikerült a Kijelentkezés!
+        </div>
+
+    </body>
+
+</html>

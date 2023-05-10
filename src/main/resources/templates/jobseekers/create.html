@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+    <head th:include="layout :: head">
+        <title>
+            Álláskereső létrehozása:
+        </title>
+    </head>
+
+    <body>
+
+        <div layout:fragment="content">
+
+            <div class="card">
+                <div class="card-header card-title">
+                    <strong>Álláskereső létrehozása:</strong>
+                </div>
+
+                <div class="card-body">
+
+                    <form action="#" th:action="@{/jobseekers}" th:object="${storeJobseekerRequest}" method="post">
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Név:</label>
+                            <input type="text" class="form-control" id="name" th:field="*{name}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                A nevet meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Cím:</label>
+                            <input type="text" class="form-control" id="address" th:field="*{address}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">
+                                A címet meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="telephone" class="form-label">
+                                Telefonszám:
+                            </label>
+                            <input type="text" class="form-control" id="telephone" th:field="*{telephone}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}">
+                                A telefonszámot meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                Email-cím:
+                            </label>
+                            <input type="text" class="form-control" id="email" th:field="*{email}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                                Az email-címet meg kell adni.
+                            </p>
+                            <p class="text-danger" th:if="${emailExists}">
+                                Az email-cím már használatban van!
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                Jelszó: (A minimális hossz: 10 karakter.)
+                            </label>
+                            <input type="text" class="form-control" id="password" th:field="*{password}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                                A jelszót meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password_confirmation" class="form-label">
+                                Jelszó megerősítése:
+                            </label>
+                            <input type="text" class="form-control" id="password_confirmation"
+                                   th:field="*{password_confirmation}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('password_confirmation')}" th:errors="*{password_confirmation}">
+                                A jelszó megerősítését meg kell adni.
+                            </p>
+                            <p class="text-danger" th:if="${pwcError}">
+                                A jelszavak nem egyeznek meg!
+                            </p>
+                        </div>
+
+                        <hr/>
+
+                        <div class="text-center">
+                            <strong>Adatvédelem</strong>
+                        </div>
+
+                        <div class="checkbox text-justify mb-3">
+                            <input type="checkbox" name="terms" th:checked="*{terms}"/>
+                            A regisztrációval elfogadom az <a href="*">Adatkezelési tájékoztató</a> munkaadók számára
+                            dokumentumban foglaltakat. Jogosult vagyok a jelentkezésemet és a regisztrációmat bármikor
+                            törölni.
+                            <p class="text-danger" th:if="${#fields.hasErrors('terms')}" th:errors="*{terms}">
+                                A dokumentumban foglaltakat el kell fogadnia.
+                            </p>
+                        </div>
+
+                        <p>
+                            Jelentkezésének elküldésével igazolja adatainak helyességét.
+                        </p>
+
+                        <hr/>
+
+                        <div class="text-center mb-3">
+                            <button class="btn btn-success" type="submit">
+                                Álláskereső létrehozása
+                            </button>
+                        </div>
+
+                        <div class="text-center">
+                            <p>
+                                Van már felhasználói fiókja?
+                                <a href="/login" class="btn btn-primary">Jelentkezzen be!</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

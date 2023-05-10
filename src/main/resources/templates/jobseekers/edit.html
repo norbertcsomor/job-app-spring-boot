@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+    <head th:include="layout :: head">
+        <title>
+            Álláskereső szerkesztése:
+        </title>
+    </head>
+
+    <body>
+
+        <div layout:fragment="content">
+
+            <div class="card">
+                <div class="card-header card-title">
+                    <strong>Álláskereső szerkesztése:</strong>
+                </div>
+
+                <div class="card-body">
+
+                    <form th:object="${updateJobseekerRequest}"
+                          th:action="@{/jobseekers/update/{id}(id=${updateJobseekerRequest.id})}" th:method="post">
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Név:</label>
+                            <input type="text" class="form-control" id="name" th:field="*{name}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                A nevet meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Cím:</label>
+                            <input type="text" class="form-control" id="address" th:field="*{address}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">
+                                A címet meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="telephone" class="form-label">
+                                Telefonszám:
+                            </label>
+                            <input type="text" class="form-control" id="telephone" th:field="*{telephone}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}">
+                                A telefonszámot meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <button class="btn btn-warning mb-3" type="submit"> <i class="bi bi-pencil-fill"></i>
+                                Álláskereső szerkesztése
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center">
+                        <a class="btn btn-danger" th:href="@{/jobseekers/delete/{id}(id=${updateJobseekerRequest.id})}">
+                            <i class="bi bi-trash"></i> Álláskereső törlése
+                        </a>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <!-- Önéletrajz rész -->
+
+                <div class="text-center">
+                    <strong>Önéletrajzok</strong>
+                </div>
+
+                <p class="text-center">
+                    Itt tud önéletrajzot csatolni a profiljához. <br />
+                    (A maximális file-méret 5 MB. Az elfogadott formátum: PDF)
+                </p>
+
+                <hr/>
+
+                <div class="text-center mb-3">
+                    <strong>
+                        Új önéletrajz feltöltése:
+                    </strong>
+                </div>
+
+                <form action="#" th:action="@{/cvs}" th:object="${storeCvRequest}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" th:value="${loggedUser.id}" th:attr="name='userId'"/>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">
+                            <strong>
+                                Önéletrajz elnevezése:
+                            </strong>
+                        </label>
+                        <input type="text" class="form-control" id="title" th:field="*{title}" />
+                        <p class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                            Az önéletrajz címét meg kell adni.
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="path" class="form-label">
+                            <strong>
+                                Önéletrajz kiválasztása:
+                            </strong>
+                        </label>
+                        <input type="file" accept=".pdf" class="form-control" id="path" name="path" th:field="*{path}" />
+                        <p class="text-danger" th:if="${#fields.hasErrors('path')}" th:errors="*{path}">
+                            Az önéletrajzot ki kell választani.
+                        </p>
+
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-success" type="submit">
+                            <i class="bi bi-file-earmark-plus-fill"></i>
+                            Önéletrajz feltöltése
+                        </button>
+                    </div>
+                </form>
+
+                <hr/>
+
+                <div class="mb-3">
+                    <strong>
+                        Feltöltött önéletrajzok kezelése:
+                    </strong>
+                </div>
+
+                <div th:if="${!cvs.isEmpty()}">
+
+                    <div class="d-flex gap-3" th:each="cv : ${cvs}">
+                        <a th:href="@{/cvs/{userId}_{title}.pdf(userId=${cv.user.id},title=${cv.title})}" 
+                           th:text="${cv.title}">Cím</a>
+                        <a class="btn btn-danger" 
+                           th:href="@{/cvs/delete/{id}(id=${cv.id})}">
+                            X
+                        </a>
+                    </div>
+                </div>
+
+                <div th:if="${cvs.isEmpty()}">
+                    <p class="text-center">Nincsenek önéletrajzok.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+    <head>
+        <title>
+            Állás részletei
+        </title>
+    </head>
+
+    <body>
+
+        <div layout:fragment="content">
+
+            <script>
+                function setStatus(text) {
+                    document.getElementById("status").value = text;
+                    document.getElementById("statusForm").submit();
+                }
+            </script>
+
+            <div class="card">
+                <div class="card-header card-title">
+                    <strong>
+                        Állás részletei:
+                    </strong>
+                </div>
+
+                <div class="card-body">
+
+                    <h4 class="text-center">
+                        <strong th:text="${jobadvertisement.title}">
+                            A munkakör megnevezése
+                        </strong>
+                    </h4>
+                    <h5 class="text-center" th:text="'Helyszín: ' + ${jobadvertisement.location}">
+                        Helyszín: Helységnév
+                    </h5>
+
+                    <div th:utext="${jobadvertisement.description}">
+                        A munka leírása
+                    </div>
+
+                    <div class="text-center" sec:authorize="hasAnyAuthority('Jobseeker')">
+                        <a th:href="@{/jobapplications/create/{jobadvertisementId}(jobadvertisementId=${jobadvertisement.id})}" class="btn btn-primary">
+                            Jelentkezés
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${loggedUserId == jobadvertisement.user.id}">
+
+                <div class="text-center mt-3 mb-3">
+                    <strong>
+                        Jelentkezők
+                    </strong>
+                </div>
+
+
+                <table class="table table-striped" th:unless="${jobapplications.isEmpty()}">
+                    <thead>
+                        <tr>
+                            <th>Jelentkező neve/email-címe:</th>
+                            <th>Önéletrajz</th>
+                            <th>Állapot</th>
+                            <th>Műveletek</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="jobapplication : ${jobapplications}">
+                            <td>
+                                <strong>
+                                    Név:
+                                </strong>
+                                <span th:text="${jobapplication.cv.user.name}">
+                                    név
+                                </span>
+                                <br/>
+                                <strong>
+                                    Email:
+                                </strong> 
+                                <span th:text="${jobapplication.cv.user.email}">
+                                    email
+                                </span>
+                            </td>
+                            <td>
+                                <a th:href="@{/cvs/{userId}_{title}.pdf(userId=${jobapplication.cv.user.id},title=${jobapplication.cv.title})}"
+                                   th:text="${jobapplication.cv.title}">Önéletrajz címe</a>
+                            </td>
+                            <td th:text="${jobapplication.status}">
+                                Állapot
+                            </td>
+                            <td class="d-flex gap-3">
+                                <form action="#" th:action="@{/jobapplications/update/{id}(id=${jobapplication.id})}" method="post" >
+                                    <input type="hidden" id="status" name="status" value="Nincs megnézve">
+                                        <button class="btn btn-success" onclick="setStatus('Elfogadva')"><i
+                                                class="bi bi-hand-thumbs-up-fill"></i>
+                                            Elfogadás</button>
+                                        <button class="btn btn-danger" onclick="setStatus('Elutasítva')"><i
+                                                class="bi bi-hand-thumbs-down-fill"></i>
+                                            Elutasítás</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div th:if="${jobapplications.isEmpty()}">
+                    <p class="text-center">Nincsenek jelentkezések.</p>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </body>
+
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<body>
+
+    <div layout:fragment="content">
+
+        <div class="card">
+
+
+            <script src="//cdn.ckeditor.com/4.19.1/standard/ckeditor.js"></script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('.ckeditor').ckeditor();
+                });
+            </script>
+
+            <div class="card-header card-title">
+                <strong>Álláshirdetés szerkesztése</strong>
+            </div>
+
+            <div class="card-body">
+
+                <form th:object="${updateJobadvertisementRequest}"
+                    th:action="@{/jobadvertisements/update/{id}(id=${updateJobadvertisementRequest.id})}"
+                    th:method="post">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Munkakör megnevezése:</label>
+                        <input type="text" class="form-control" id="title" th:field="*{title}" />
+                        <p class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                            A munkakör megnevezését meg kell adni.
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Munkavégzés helye:</label>
+                        <input type="text" class="form-control" id="location" th:field="*{location}" />
+                        <p class="text-danger" th:if="${#fields.hasErrors('location')}" th:errors="*{location}">
+                            A munkavégzés helyét meg kell adni.
+                        </p>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            Állás részletezése:
+                        </label>
+                        <textarea class="ckeditor form-control" name="description" rows="10" id="description"
+                            th:field="*{description}" />
+                        <p class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                            Az állás részletezését meg kell adni.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-warning" type="submit">
+                            Álláshirdetés szerkesztése
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

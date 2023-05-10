@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+    
+    <head>
+        <title>
+            Oldal címe
+        </title>
+    </head>
+
+    <body>
+
+        <div layout:fragment="content">
+
+            <div class="card">
+                <div class="card-header card-title">
+                    <strong>Munkaadó szerkesztése:</strong>
+                </div>
+
+                <div class="card-body">
+
+                    <form th:object="${updateEmployerRequest}"
+                          th:action="@{/employers/update/{id}(id=${updateEmployerRequest.id})}" th:method="post">
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Cégnév:</label>
+                            <input type="text" class="form-control" id="name" th:field="*{name}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                A vállalkozás nevét meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Cím:</label>
+                            <input type="text" class="form-control" id="address" th:field="*{address}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">
+                                A vállalkozás címét meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="telephone" class="form-label">
+                                Telefonszám:
+                            </label>
+                            <input type="text" class="form-control" id="telephone" th:field="*{telephone}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}">
+                                A vállalkozás telefonszámát meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <button class="btn btn-warning mb-3" type="submit"> <i class="bi bi-pencil-fill"></i>
+                                Munkaadó szerkesztése
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center">
+                        <a class="btn btn-danger" th:href="@{/employers/delete/{id}(id=${updateEmployerRequest.id})}">
+                            <i class="bi bi-trash"></i> Munkaadó törlése
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

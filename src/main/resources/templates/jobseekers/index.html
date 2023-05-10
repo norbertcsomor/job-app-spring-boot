@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" layout:decorate="~{layout}">
+
+<head>
+    <title>
+        Álláskeresők
+    </title>
+</head>
+
+<div layout:fragment="content">
+
+    <div class="card">
+
+        <div class="card-header card-title">
+            <strong>Álláskeresők:</strong>
+        </div>
+
+        <div class="card-body">
+
+            <div th:if="${!jobseekers.isEmpty()}">
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Sorszám</th>
+                            <th>Álláskereső adatai</th>
+                            <th>Műveletek</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="jobseeker,index : ${jobseekers}">
+                            <td th:text="${index.count} + .">
+                                Index
+                            </td>
+                            <td>
+                                <strong>
+                                    Név:
+                                </strong>
+                                <span th:text="${jobseeker.name}">
+                                    név
+                                </span>
+                                <br />
+                                <strong>
+                                    Email-cím:
+                                </strong>
+                                <span th:text="${jobseeker.email}">
+                                    email-cím
+                                </span>
+                            </td>
+                            <td class="d-flex gap-3">
+                                <a th:href="@{/jobseekers/{id}(id=${jobseeker.id})}" class="btn btn-primary mb-3">
+                                    <i class="bi bi-info-circle"></i>
+                                    Részletek...</a>
+                                <a th:href="@{/jobseekers/edit/{id}(id=${jobseeker.id})}" class="btn btn-warning mb-3">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Szerkesztés</a>
+                                <button class="btn btn-danger mb-3" data-bs-toggle="modal"
+                                    data-bs-target="#deleteJobseekerModal">
+                                    <i class="bi bi-trash"></i> Törlés</button>
+                            </td>
+
+
+                            <!-- Álláskereső törlése Modal -->
+                            <div class="modal fade" id="deleteJobseekerModal" tabindex="-1"
+                                aria-labelledby="deleteJobseekerModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="deleteJobadvertisementModalLabel">
+                                                Álláskereső
+                                                törlése
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Törölni szeretné a álláskeresőt?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Mégsem</button>
+                                            <a class="btn btn-danger"
+                                                th:href="@{/jobseekers/delete/{id}(id=${jobseeker.id})}">
+                                                <i class="bi bi-trash"></i> Törlés
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div th:if="${jobseekers.isEmpty()}">
+                <p class="text-center">Nincsenek álláskeresők.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="text-center mt-3 mb-3">
+        <a th:href="@{/createJobseekerExcelSheet}" class="btn btn-primary mb-3">
+            <i class="bi bi-download"></i>
+            Álláskeresők listájának letöltése Excel formátumban...</a>
+    </div>
+
+</div>
+
+
+</html>

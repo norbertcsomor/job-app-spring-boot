@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+    <head>
+        <title>
+            Jelentkezés
+        </title>
+    </head>
+
+    <body>
+
+        <div layout:fragment="content">
+
+            <div class="card">
+                <div class="card-header card-title">
+                    <strong>
+                        Állás részletei:
+                    </strong>
+                </div>
+
+                <div class="card-body">
+
+                    <h4 class="text-center">
+                        <strong th:text="${jobadvertisement.title}">
+                            A munkakör megnevezése
+                        </strong>
+                    </h4>
+                    <h5 class="text-center" th:text="'Helyszín: ' + ${jobadvertisement.location}">
+                        Helyszín: Helységnév
+                    </h5>
+
+                    <div th:utext="${jobadvertisement.description}">
+                        A munka leírása
+                    </div>
+
+                    <hr/>
+
+                    <div class="text-center">
+                        <strong>Mellékletek</strong>
+                    </div>
+
+                    <p class="text-center">
+                        Itt tud mellékletet csatolni a jelentkezéséhez. <br />
+                        (A maximális file-méret 5 MB. Az elfogadott formátum: PDF)
+                    </p>
+
+                    <hr/>
+
+                    <div class="text-center mb-3">
+                        <strong>
+                            Új önéletrajz feltöltése:
+                        </strong>
+                    </div>
+
+                    <form action="#" th:action="@{/cvs}" th:object="${storeCvRequest}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" th:value="${loggedUser.id}" th:attr="name='userId'"/>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">
+                                <strong>
+                                    Önéletrajz elnevezése:
+                                </strong>
+                            </label>
+                            <input type="text" class="form-control" id="title" th:field="*{title}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                                Az önéletrajz címét meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="path" class="form-label">
+                                <strong>
+                                    Önéletrajz kiválasztása:
+                                </strong>
+                            </label>
+                            <input type="file" accept=".pdf" class="form-control" id="path" name="path" th:field="*{path}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('path')}" th:errors="*{path}">
+                                Az önéletrajzot ki kell választani.
+                            </p>
+
+                        </div>
+
+                        <div class="text-center">
+                            <button class="btn btn-success" type="submit">
+                                <i class="bi bi-file-earmark-plus-fill"></i>
+                                Önéletrajz feltöltése
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr/>
+
+                    <form action="#" th:action="@{/jobapplications}" th:object="${storeJobapplicationRequest}" method="post" enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <strong>
+                                Választás a feltöltött önéletrajzok közül:
+                            </strong>
+                        </div>
+
+                        <div th:if="${!cvs.isEmpty()}" class="form-group">
+
+                            <div class="form-check d-flex gap-3" th:each="cv : ${cvs}">
+                                <input type="radio" th:field="*{cvId}" th:value="${cv.id}" class="form-check-input"/>
+                                <label class="form-check-label" for="radio">
+                                    <a th:href="@{/cvs/{userId}_{title}.pdf(userId=${cv.user.id},title=${cv.title})}" 
+                                       th:text="${cv.title}">Cím</a>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div th:if="${cvs.isEmpty()}">
+                            <p class="text-center">Nincsenek önéletrajzok.</p>
+                        </div>
+
+                        @error('cvId')
+                        <p class="text-danger">Az önéletrajzot ki kell választani.</p>
+                        @enderror
+
+                        <hr/>
+
+                        <input type="hidden" th:value="${jobadvertisement.id}" name="jobadvertisementId"/>
+
+                        <div class="text-center">
+                            <button class="btn btn-primary" type="submit"><i class="bi bi-check2"></i>
+                                Jelentkezés
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

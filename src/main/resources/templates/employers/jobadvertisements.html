@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" 
+      layout:decorate="~{layout}">
+    
+    <head>
+        <title>
+            Álláshirdetés létrehozása
+        </title>
+    </head>
+
+    <body>
+
+        <div layout:fragment="content">
+
+            <div class="card">
+
+                <script src="//cdn.ckeditor.com/4.19.1/standard/ckeditor.js"></script>
+                <script>
+                    $(document).ready(function () {
+                        $('.ckeditor').ckeditor();
+                    });
+                </script>
+
+                <div class="card-header card-title">
+                    <strong>Álláshirdetés létrehozása</strong>
+                </div>
+
+                <div class="card-body">
+
+                    <form action="#" th:action="@{/jobadvertisements}" th:object="${storeJobadvertisementRequest}"
+                          method="post">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Munkakör megnevezése:</label>
+                            <input type="text" class="form-control" id="title" th:field="*{title}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                                A munkakör megnevezését meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Munkavégzés helye:</label>
+                            <input type="text" class="form-control" id="location" th:field="*{location}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('location')}" th:errors="*{location}">
+                                A mMunkavégzés helyét meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                Állás részletezése:
+                            </label>
+                            <textarea class="ckeditor form-control" name="description" rows="10" id="description"
+                                      th:field="*{description}" />
+                            <p class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                                Az állás részletezését meg kell adni.
+                            </p>
+                        </div>
+
+                        <div class="text-center">
+                            <button class="btn btn-success" type="submit">
+                                Álláshirdetés létrehozása
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <hr/>
+
+                <div class="text-center mt-3 mb-3">
+                    <strong>
+                        Feladott álláshirdetések
+                    </strong>
+                </div>
+
+                <div class="card-body">
+
+                    <div th:if="${!jobadvertisements.isEmpty()}">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Sorszám</th>
+                                    <th>Állás részletei</th>
+                                    <th>Műveletek</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="jobadvertisement,index : ${jobadvertisements}">
+                                    <td th:text="${index.count} + .">
+                                        Index
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            Munkakör:
+                                        </strong>
+                                        <span th:text="${jobadvertisement.title}">
+                                            munkakör
+                                        </span> 
+                                        <br/>
+                                        <strong>
+                                            Helyszín:
+                                        </strong>
+                                        <span th:text="${jobadvertisement.location}">
+                                            helyszín
+                                        </span>
+                                    </td>
+                                    <td class="d-flex gap-3">
+                                        <a th:href="@{/jobadvertisements/{id}(id=${jobadvertisement.id})}"
+                                           class="btn btn-primary mb-3">
+                                            <i class="bi bi-info-circle"></i>
+                                            Részletek...</a>
+                                        <a th:href="@{/jobadvertisements/edit/{id}(id=${jobadvertisement.id})}"
+                                           class="btn btn-warning mb-3">
+                                            <i class="bi bi-pencil-square"></i>
+                                            Szerkesztés</a>
+                                        <button class="btn btn-danger mb-3" data-bs-toggle="modal"
+                                                data-bs-target="#deleteJobadvertisementModal">
+                                            <i class="bi bi-trash"></i> Törlés</button>
+                                    </td>
+
+
+                                    <!-- Álláshirdetés törlése Modal -->
+                                    <div class="modal fade" id="deleteJobadvertisementModal" tabindex="-1"
+                                         aria-labelledby="deleteJobadvertisementModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="deleteJobadvertisementModalLabel">
+                                                        Álláshirdetés
+                                                        törlése
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Törölni szeretné az álláshirdetést?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Mégsem</button>
+                                                    <a class="btn btn-danger"
+                                                       th:href="@{/jobadvertisements/delete/{id}(id=${jobadvertisement.id})}">
+                                                        <i class="bi bi-trash"></i> Törlés
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div th:if="${jobadvertisements.isEmpty()}">
+                        <p class="text-center">Nincsenek álláshirdetések.</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

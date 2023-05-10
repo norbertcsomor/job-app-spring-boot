@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="hero">
+        <div class="px-4 py-5 my-5 text-center border border-dark">
+            <h1 class="display-5 fw-bold">Regisztráció</h1>
+            <div class="col-lg-6 mx-auto">
+                <p>Az oldalon történő regisztrációval válik az Ön számára lehetővé: <br>
+                <ul>
+                    <li><strong>Munkaadóként</strong> az álláshirdetés feladása, valamint</li>
+                    <li><strong>Álláskeresőként</strong> az álláshirdetésekre való jelentkezés.</li>
+                </ul>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <button type="button" onclick="location.href='/employers/create'"
+                        class="btn btn-danger btn-lg px-4">Munkaadóknak</button>
+                    <button type="button" onclick="location.href='/jobseekers/create'"
+                        class="btn btn-success btn-lg px-4">Álláskeresőknek</button>
+                </div>
+            </div>
+        </div>
+            </div>
+</body>
+
+</html>

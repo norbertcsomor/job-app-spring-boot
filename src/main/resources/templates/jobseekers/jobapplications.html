@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+    <head th:include="layout :: head">
+        <title>
+            Álláskereső jelentkezései
+        </title>
+    </head>
+
+    <body>
+
+        <div layout:fragment="content">
+
+            <div class="card">
+
+                <div class="card-header card-title">
+                    <strong>
+                        Jelentkezések:
+                    </strong>
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Munkakör/Helyszín</th>
+                                <th>Önéletrajz</th>
+                                <th>Állapot</th>
+                                <th>Műveletek</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="jobapplication : ${jobapplications}">
+                                <td>
+                                    <strong>
+                                        Munkakör:
+                                    </strong>
+                                    <span th:text="${jobapplication.jobadvertisement.title}">
+                                        munkakör
+                                    </span> 
+                                    <br/>
+                                    <strong>
+                                        Helyszín:
+                                    </strong>
+                                    <span th:text="${jobapplication.jobadvertisement.location}">
+                                        helyszín
+                                    </span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/cvs/{userId}_{title}.pdf(userId=${jobapplication.cv.user.id},title=${jobapplication.cv.title})}" 
+                                       th:text="${jobapplication.cv.title}">Cím</a>
+                                </td>
+                                <td th:text="${jobapplication.status}">
+                                    A jelentkezés státusza
+                                </td>
+                                <td class="d-flex gap-3">
+                                    <a th:href="@{/jobadvertisements/{id}(id=${jobapplication.jobadvertisement.id})}"
+                                       class="btn btn-primary">
+                                        <i class="bi bi-info-circle-fill"></i>
+                                        Részletek... </a>
+                                    <a class="btn btn-danger" th:href="@{/jobapplications/delete/{id}(id=${jobapplication.id})}">
+                                        Visszalépés
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div th:if="${jobapplications.isEmpty()}">
+                        <p class="text-center">Nincsenek jelentkezések.</p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </body>
+
+</html>
